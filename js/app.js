@@ -4,14 +4,14 @@ $(function () {
     $.ajax({
         url: 'api/books.php',
         type: 'GET',
-        dataType: 'json',
+        dataType: 'json'
     }).done(function (result) {
 
         for (i = 0; i < result.length; i++) {
             var book = JSON.parse(result[i]);
 
             var panelGroup = $('<div>');
-            panelGroup.addClass('panel-group')
+            panelGroup.addClass('panel-group');
 
             var panelDefault = $('<div>');
             panelDefault.addClass('panel panel-default');
@@ -43,8 +43,8 @@ $(function () {
     }).fail(function () {
         console.log('Error. Unable to load titles.');
     });
-
-
+    
+//load one title
     $('#bookList').on('click', '.panel-heading > h4', function (e) {
         
         var h4 = $(e.target);
@@ -70,7 +70,7 @@ $(function () {
                       </div>\n\
                       <div class="form-group">\n\
                         <div class="col-sm-offset-2 col-sm-10">\n\
-                          <button type="submit" class="btn btn-default">Update</button>\n\
+                          <button type="submit" class="btn btn-primary">Update</button>\n\
                         </div>\n\
                       </div>\n\
                     </form>';
@@ -90,7 +90,32 @@ $(function () {
             console.log('Request failed.');
         });
     });
+ 
+    //update book
+    $('.bookList').on('click', '.btn-primary', function(e) {
+        
+        var button = $(e.target);
+        var bookId = button.closest('.panel-collapse').prev().find('h4').attr('data-id');
+        var title = button.parent().find('#title').val();
+        var author = button.parent().find('#author').val();
+        var desc = button.parent().find('#description').val();
+        var message = confirm('Save changes?');
+        
+        if(message == true){
+            $.ajax({
+                url: 'api/books.php',
+                type: 'PUT',
+                data: 'id' + bookId + '&title=' + title + '&author=' + author + '&description=' + desc
+            }).done(function(result){
+                console.log('Changes saved.');
+                location.reload();
+            }).fail(function(result){
+                console.log('Request failed.');
+            });
+        }
+    });
     
+    //delete book
     $('#bookList').on('click', '.btn-warning', function(e) {
         
         var button = $(e.target);
@@ -98,17 +123,17 @@ $(function () {
         var message = confirm('Delete book?');
         
         if (message == true) {
-        $.ajax({
-           url: 'api/books.php',
-           type: 'DELETE',
-           data: 'id' + bookId,
-        }).done(function(result) {
-           console.log('Book removed.');
-           location.reload();
-        }).fail(function(result) {
-            console.log('Request failed.')
-        })
-    }
+            $.ajax({
+                url: 'api/books.php',
+                type: 'DELETE',
+                data: 'id' + bookId
+            }).done(function (result) {
+                console.log('Book removed.');
+                location.reload();
+            }).fail(function (result) {
+                console.log('Request failed.');
+            });
+        }
     });
 });
 

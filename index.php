@@ -13,7 +13,7 @@
     <body>
         <div class="container">
          <h3>Add Book:</h3>
-         <form class="form-horizontal">
+         <form class="form-horizontal" action="api/books.php" action="POST">
            <div class="form-group">
              <label class="control-label col-sm-2" for="title">Title:</label>
                <div class="col-sm-7">
